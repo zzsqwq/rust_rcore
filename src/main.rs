@@ -3,6 +3,10 @@
 use core::panic::PanicInfo;
 
 #[panic_handler]
-fn panic(_info: &PnaicInfo) -> !{
+fn panic(_info: &PanicInfo) -> !{
     loop{}
+}
+fn main()
+{
+
 }
