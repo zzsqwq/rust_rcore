@@ -37,9 +37,16 @@ pub fn handle_interrupt(context: &mut Context, scause: Scause, stval: usize) {
 pub fn handle_interrupt(context: &mut Context, scause: Scause, stval: usize) {
     // 可以通过 Debug 来查看发生了什么中断
     // println!("{:x?}", context.scause.cause());
+    // Experiment 2 直接检测stval 是否为0x0 即可
+    if stval == 0x0 
+    {
+        println! ("SUCCESS!");
+    }
     match scause.cause() {
         // 断点中断（ebreak）
         Trap::Exception(Exception::Breakpoint) => breakpoint(context),
+        // Experiment 1
+        Trap::Exception(Exception::LoadFault) => loadfault(context,stval),
         // 时钟中断
         Trap::Interrupt(Interrupt::SupervisorTimer) => supervisor_timer(context),
         // 其他情况，终止当前线程
@@ -52,9 +59,20 @@ pub fn handle_interrupt(context: &mut Context, scause: Scause, stval: usize) {
 /// 继续执行，其中 `sepc` 增加 2 字节，以跳过当前这条 `ebreak` 指令
 fn breakpoint(context: &mut Context) {
     println!("Breakpoint at 0x{:x}", context.sepc);
-    context.sepc += 2;
+    //Experiment 3 直接使context.sepc = 0 即可当sret时跳转到0x0 从而触发中断
+    context.sepc = 0;
 }
-
+//  处理 LoadFault
+fn loadfault(context: &mut Context, stval: usize)
+{
+    //Experiment 1
+    panic!(
+          "loadfault interrupt: context: {:x?}\nstval: {:x}",
+          context,
+          stval
+      );
+    
+}
 /// 处理时钟中断
 ///
 /// 目前只会在 [`timer`] 模块中进行计数
