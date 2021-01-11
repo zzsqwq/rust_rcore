@@ -41,5 +41,6 @@ pub extern "C" fn rust_main() -> () {
         llvm_asm!("ebreak"::::"volatile");
     };
 
-//    unreachable!();
+    loop{}
+//unreachable!();
 }
