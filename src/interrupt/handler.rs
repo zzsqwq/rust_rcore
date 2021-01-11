@@ -59,7 +59,8 @@ pub fn handle_interrupt(context: &mut Context, scause: Scause, stval: usize) {
 /// 继续执行，其中 `sepc` 增加 2 字节，以跳过当前这条 `ebreak` 指令
 fn breakpoint(context: &mut Context) {
     println!("Breakpoint at 0x{:x}", context.sepc);
-    context.sepc += 2;
+    //Experiment 3 直接使context.sepc = 0 即可当sret时跳转到0x0 从而触发中断
+    context.sepc = 0;
 }
 //  处理 LoadFault
 fn loadfault(context: &mut Context, stval: usize)
