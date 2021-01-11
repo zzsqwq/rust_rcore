@@ -37,6 +37,11 @@ pub fn handle_interrupt(context: &mut Context, scause: Scause, stval: usize) {
 pub fn handle_interrupt(context: &mut Context, scause: Scause, stval: usize) {
     // 可以通过 Debug 来查看发生了什么中断
     // println!("{:x?}", context.scause.cause());
+    // Experiment 2 直接检测stval 是否为0x0 即可
+    if stval == 0x0 
+    {
+        println! ("SUCCESS!");
+    }
     match scause.cause() {
         // 断点中断（ebreak）
         Trap::Exception(Exception::Breakpoint) => breakpoint(context),
