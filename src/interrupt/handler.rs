@@ -40,6 +40,8 @@ pub fn handle_interrupt(context: &mut Context, scause: Scause, stval: usize) {
     match scause.cause() {
         // 断点中断（ebreak）
         Trap::Exception(Exception::Breakpoint) => breakpoint(context),
+        // Experiment 1
+        Trap::Exception(Exception::LoadFault) => loadfault(context,stval),
         // 时钟中断
         Trap::Interrupt(Interrupt::SupervisorTimer) => supervisor_timer(context),
         // 其他情况，终止当前线程
@@ -54,7 +56,17 @@ fn breakpoint(context: &mut Context) {
     println!("Breakpoint at 0x{:x}", context.sepc);
     context.sepc += 2;
 }
-
+//  处理 LoadFault
+fn loadfault(context: &mut Context, stval: usize)
+{
+    //Experiment 1
+    panic!(
+          "loadfault interrupt: context: {:x?}\nstval: {:x}",
+          context,
+          stval
+      );
+    
+}
 /// 处理时钟中断
 ///
 /// 目前只会在 [`timer`] 模块中进行计数
